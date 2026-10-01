@@ -36,12 +36,18 @@ const initMap = (data, migrationData) => {
         };
     };
 
-    const getColor = (feature) => {
-        const m = getMigration(feature);
-        let hue = Math.pow(m.positive / m.negative, 3) * 60;    
-        hue = Math.min(hue, 120);
-        return `hsl(${hue}, 75%, 50%)`;
-    };
+const getColor = (feature) => {
+    const m = getMigration(feature);
+    
+    if (!m || m.positive == null || m.negative == null) {
+        return "hsl(0, 0%, 60%)"; 
+    }
+    let hue = Math.pow(m.positive / m.negative, 3) * 60;
+    if (Number.isNaN(hue)) hue = 0; 
+    hue = Math.min(hue, 120);      
+
+    return `hsl(${hue}, 75%, 50%)`;
+};
 
     let geoJson = L.geoJSON(data, {
         style: (feature) => {
